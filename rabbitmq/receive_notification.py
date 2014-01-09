@@ -98,9 +98,6 @@ class MessageFilter:
                 retrieve_values[j_path] = value[0]
             elif "includes" in  config[j_path].lower():
                 yes_list = match_value_from_string(config[j_path].lower(),"includes")
-                print value
-                print yes_list
-
                 if is_superstring_of_a_string_from_list(yes_list,value[0]) is not False:
                     retrieve_values[j_path] = value[0]
             elif "does_not_include" in  config[j_path].lower():
