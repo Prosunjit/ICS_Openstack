@@ -38,6 +38,10 @@ def is_superstring_of_a_string_from_list(list,test_string):
     return False
 
 
+'''
+This class uses a configuration file to extract selected values from the json string.
+It also implement selection based on positive and negative list of keywords.
+'''
 
 class MessageFilter:
     message_sanitization = True # we need to sanitize data before use
@@ -116,6 +120,9 @@ class MessageFilter:
         #return self.parse_from_config(conf_path, conf_value)
         return self.parse_from_config(config)
 
+'''
+    This class connects to and fetches messages from the 'notifications.info' queue where each event of OpenStack  is reported.
+'''
 class MessageBroker:
 
     def __init__(self):
@@ -142,5 +149,5 @@ def receive_message():
     MessageBroker()
 
 receive_message()
-#print "schuling" in return_value_from_string("includes(  scheduling, restart  )","includes")
+
 
