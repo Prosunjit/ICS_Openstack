@@ -4,6 +4,41 @@ import sys
 import json
 from jsonpath_rw import jsonpath, parse
 
+'''
+input : matching_string: "includes(  scheduling, restart  )"
+        beacon_word: "includes"
+output: ['scheduling','restart']
+
+this function match the beacon word, if the beacon_word is present, it removes the beacon_word and brackets and return
+        remaining values splitted by commas
+
+'''
+def match_value_from_string(matching_string, beacon_word):
+    matching_string = matching_string.lower()
+    if beacon_word in  matching_string:
+        string1 = matching_string.replace(beacon_word,"")
+        string1 = string1.replace("(","")
+        string1 = string1.replace(")","")
+        t_values = string1.split(",")
+        string_values = [str.strip() for str in t_values]
+        return string_values
+    return False
+
+'''
+Check if a String is a substring in a list of Strings
+input: list: ["abc","def"]
+       test_string: "abcd"
+output: "abc".
+'''
+
+def is_superstring_of_a_string_from_list(list,test_string):
+    for str in list:
+        if str in test_string :
+            return str
+    return False
+
+
+
 class MessageFilter:
     message_sanitization = True # we need to sanitize data before use
     from_file = None
@@ -48,23 +83,38 @@ class MessageFilter:
 
     def parse_from_file(self):
         pass
-    def parse_from_config(self,config, config_values):
+    def parse_from_config(self,config):
         # config is a dictionary
         retrieve_values = {}
-        for conf in config:
-	    value = self.parse_from_path(config[conf])
-	    if (config_values[conf].lower() == "any" ) or (value and value[0] == config_values[conf]):
-	      retrieve_values[conf] = value
+        for j_path in config:
+            value = self.parse_from_path(j_path)
+            if value.__len__() == 0:
+                continue
+            elif (config[j_path].lower() == "any" ):
+                retrieve_values[j_path] = value[0]
+            elif "includes" in  config[j_path].lower():
+                yes_list = match_value_from_string(config[j_path].lower(),"includes")
+                print value
+                print yes_list
 
+                if is_superstring_of_a_string_from_list(yes_list,value[0]) is not False:
+                    retrieve_values[j_path] = value[0]
+            elif "does_not_include" in  config[j_path].lower():
+                no_list = match_value_from_string(config[j_path].lower(),"does_not_include")
+                if is_superstring_of_a_string_from_list(no_list,value[0]) is False:
+                    retrieve_values[j_path] = value[0]
 
         return retrieve_values
+
+
     '''
         The json path to retrieve value from can be given as a config file, or as a dictionary containing paths
     '''
     def parse(self):
         # using predefined configuration file here.
-        from filter import conf_path, conf_value
-        return self.parse_from_config(conf_path, conf_value)
+        from filter import  config
+        #return self.parse_from_config(conf_path, conf_value)
+        return self.parse_from_config(config)
 
 class MessageBroker:
 
@@ -86,9 +136,11 @@ class MessageBroker:
         # the callback method body must not contain any file reference that is not included inside this script.
         # probably, this is a security requirement for PIKA library
         print MessageFilter(message=body).parse()
+        print "\n"
 
 def receive_message():
     MessageBroker()
 
 receive_message()
+#print "schuling" in return_value_from_string("includes(  scheduling, restart  )","includes")
 
