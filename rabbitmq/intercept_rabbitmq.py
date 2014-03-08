@@ -9,7 +9,7 @@
 import pika
 import sys
 import json
-from filter import conf_path, conf_value
+#from filter import conf_path, conf_value
 
 from jsonpath_rw import jsonpath, parse
 #import MessageFilter
@@ -94,7 +94,8 @@ class OpenRabbit:
         channel.exchange_declare(exchange = exchange_name,
                          type='topic')
 
-        result = channel.queue_declare(exclusive=True)
+        print "declaring simple_queue "
+	result = channel.queue_declare(queue=queue_name)
         channel.queue_bind(exchange=exchange_name,
                    queue=queue_name,
                    routing_key=binding_key)
