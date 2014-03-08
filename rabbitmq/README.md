@@ -1,7 +1,11 @@
 Prerequisite:
+	 
 	 Install pika library for talking to rabbitmq
+	 
 	 use : pip_install pika
+	 
 	 Install jsonpath_rw
+	 
 	 use: pip_install jsonpath_rw
 
 
@@ -11,4 +15,5 @@ File description:
 
 
 Run the script:
+
 	python intercept_rabbitmq.py
