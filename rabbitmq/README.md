@@ -17,3 +17,11 @@ File description:
 Run the script:
 
 	python intercept_rabbitmq.py
+
+	python receive_notification.py 
+
+
+Configuration for running receive-notification:
+
+	we need to chagne the file : https://github.com/openstack/oslo-incubator/blob/master/openstack/common/notifier/api.py to send notificaiton in appropriate way.
+	for more information see the configured api.py here.

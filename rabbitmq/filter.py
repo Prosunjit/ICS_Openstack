@@ -8,11 +8,23 @@
 '''
 
 
-config = {
+notification_message_config = {
     "_context_request_id":"any",
     "event_type":"does_not_include(  scheduler.run_instance  )",
     "_unique_id":"any",
     "payload.hostname":"any",
     "payload.state_description":"any",
     "payload.instance_id":"any"
+}
+
+
+rabbit_message_config = {
+    "_msg_id":"any",
+    "_context_request_id":"any",
+    "_context_auth_token":"any",
+    "_context_user_id":"any",
+    "_context_user_name":"any",
+    "_context_project_name":"any",
+    "_context_tenant":"any",
+    "method":"any"
 }

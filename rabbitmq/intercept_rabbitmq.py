@@ -9,60 +9,10 @@
 import pika
 import sys
 import json
-#from filter import conf_path, conf_value
 
 from jsonpath_rw import jsonpath, parse
-#import MessageFilter
-
-class MessageFilter:
-    from_file = None
-    json_string = None
-    def __init__(self, file_name=None,message=None):
-        if file_name:
-            from_file = True
-            self.pysondata = self.readJSONfile(file_name)
-        elif message:
-             self.pysondata = self.readFromJSONString(message)
-
-    def readfile(self,file_name):
-        with open (file_name, "r") as myfile:
-            data=myfile.read()
-            return data
-
-
-    def readJSONfile(self,file_name):
-        data = self.readfile(file_name)
-        json_data = json.loads(data)
-        self.pysondata = json_data
-        return json_data
-
-    def readFromJSONString(self,str):
-        json_data = json.loads(str)
-        self.pysondata = json_data
-        return self.pysondata
-
-    def parse_from_path(self,path):
-        jsonpath_expr = parse(path)
-        #print self.pysondata
-        return [match.value for match in jsonpath_expr.find(self.pysondata)]
-
-    def parse_from_file(self):
-        pass
-    def parse_from_config(self,config, config_values):
-        # config is a dictionary
-        retrieve_values = {}
-        for conf in config:
-	    value = self.parse_from_path(config[conf])
-	    if (config_values[conf].lower() == "any" ) or (value and value[0] == config_values[conf]):
-	      retrieve_values[conf] = value
-            
-
-        return retrieve_values
-    '''
-        The json path to retrieve value from can be given as a config file, or as a dictionary containing paths
-    '''
-    def parse(self):
-        return self.parse_from_config(conf_path, conf_value)
+from MessageFilter import MessageFilter
+from filter import rabbit_message_config
 
 def exchange_exists(exchange_name,exchg_type):
     print "exchange name is " + exchange_name
@@ -129,11 +79,11 @@ class OpenRabbit:
         print "\n\n"
         print ("----------------{}th message -----------------\n".format(self.messageno))
         print method.routing_key+"\n"
-        print body
-        
+        #print body
+
         #self.nativecall(body)
         #print body
-        #print MessageFilter(body).parse()
+        print MessageFilter(message=body).parse(rabbit_message_config)
         
 
 def open_rabbit_test():
